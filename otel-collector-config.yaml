@@ -1,0 +1,22 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+
+processors:
+  batch:
+    timeout: 10s
+    send_batch_size: 1000
+exporters:
+  googlecloud:
+    project: alfred-eyes-staging
+    metric:
+      prefix: "custom.googleapis.com/otel-poc-timeseries-bug"
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [googlecloud]

@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.142.0
+    command: ["--config=/etc/otel/config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel/config.yaml:ro
+      - ./gcp-sa.json:/gcp-sa.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/gcp-sa.json
+    ports:
+      - "8888:8888"
+
+  telegraf:
+    image: telegraf:1.36-alpine
+    depends_on:
+      - otel-collector
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
