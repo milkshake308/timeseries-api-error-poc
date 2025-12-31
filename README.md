@@ -95,23 +95,21 @@ Error summary:
 
 Removing batching entirely would avoid the error but introduces:
 
-- High network overhead (hundreds/thousands of requests per second)
+- Higher network overhead (hundreds/thousands of requests per second)
 - Higher CPU/memory usage in Collector
 - Increased risk of partial failures
 
 ## Resolution Path / Workarounds
 
-To respect GCM constraints while keeping batching:
+One of the following strategy can adopted to ensure:
 
-1. Reduce batch timeout
-   - Example: `batch.timeout: 1s`  
-   - Ensures only one point per TimeSeries per batch.
+<del>**Reduce batch timeout**</dev>
 
-2. Reduce metric frequency
-   - Align the generation frequency with batch size / timeout.
+**Reduce metric frequency**
+   - Align the generation frequency under batch size / timeout by huge factor (over 3x under to achieve good consistency).
 
-3. Aggregate multiple points
+**Aggregate multiple points**
    - Sum, average, min/max multiple high-frequency points -> one point per batch.
 
-4. Generate unique TimeSeries
+**Generate unique TimeSeries**
    - Add a dynamic label or attribute per point to create distinct TimeSeries.
